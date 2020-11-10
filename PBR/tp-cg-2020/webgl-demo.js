@@ -78,7 +78,7 @@ function main() {
 // Draw the scene.
 //
 function drawScene(deltaTime) {
-	gl.clearColor(0.0, 0.0, 0.0, 1.0);  // Clear to black, fully opaque
+	gl.clearColor(0.1, 0.1, 0.1, 1.0);  // Clear to black, fully opaque
 	gl.clearDepth(1.0);                 // Clear everything
 	gl.enable(gl.DEPTH_TEST);           // Enable depth testing
 	gl.depthFunc(gl.LEQUAL);            // Near things obscure far things
@@ -144,6 +144,32 @@ programInfo.attribLocations.vertexNormal);
 // Tell WebGL which indices to use to index the vertices
 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.indices);
 
+//**********************CREATE TEXTURE*****************
+
+const texture = gl.createTexture();
+gl.bindTexture(gl.TEXTURE_2D, texture);
+
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+// Because images have to be download over the internet
+// they might take a moment until they are ready.
+// Until then put a single pixel in the texture so we can
+// use it immediately. When the image has finished downloading
+// we'll update the texture with the contents of the image.
+const level = 0;
+const internalFormat = gl.RGBA;
+const width = 1;
+const height = 1;
+const border = 0;
+const srcFormat = gl.RGBA;
+const srcType = gl.UNSIGNED_BYTE;
+const pixel = new Uint8Array([0, 0, 255, 255]);  // opaque blue
+gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,srcFormat, srcType, document.getElementById('myImage'));
+//**************************************************************************************************************
+
+
 // Tell WebGL to use our program when drawing
 gl.useProgram(programInfo.program);
 
@@ -163,10 +189,10 @@ gl.uniformMatrix4fv(
 		// Specify the texture to map onto the faces.
 
 		// Tell WebGL we want to affect texture unit 0
-		// gl.activeTexture(gl.TEXTURE0);
+		 gl.activeTexture(gl.TEXTURE0);
 
 		// Bind the texture to texture unit 0
-		// gl.bindTexture(gl.TEXTURE_2D, texture);
+		 gl.bindTexture(gl.TEXTURE_2D, texture);
 
 		// Tell the shader we bound the texture to texture unit 0
 		// gl.uniform1i(programInfo.uniformLocations.uSampler, 0);

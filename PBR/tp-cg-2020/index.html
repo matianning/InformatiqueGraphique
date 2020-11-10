@@ -14,6 +14,7 @@
   <body>
 	  <div id="fps">FPS</div>
     <canvas id="glcanvas" width="640" height="480"></canvas>
+    <img id="myImage" src = "Textures/texture0.jpg" width="0" height="0"></img>
 	<div>
 		<h1>Parameters</h1>
 		<div id="parameters">
@@ -68,7 +69,7 @@
 
   #define PI 3.14159265359
 
- // uniform sampler2D uSampler;// texture
+  uniform sampler2D uSampler;// texture
 
   float DistributionGGX(vec3 N, vec3 V, vec3 H, float roughness){
     float nominator = roughness * roughness;
@@ -163,12 +164,13 @@
 //=================
 
     // tonemapping
-    /*
+
     Lo = Lo / (Lo + vec3(1.0));
     Lo = pow(Lo, vec3(1.0/2.2));
 
-    gl_FragColor = vec4(Lo,1.0);
-*/
+    //gl_FragColor = vec4(Lo,1.0);
+
+    //gl_FragColor = texture2D(uSampler, vFragUV) * vec4(Lo,1.0);
 //**************CLEAR COAT*****************
 
    float clearCoat = 0.5;
@@ -190,11 +192,11 @@
    res = res / (res + vec3(1.0));
    res = pow(res, vec3(1.0/2.2));
 
-   gl_FragColor =  vec4(res, 1.0);
+   gl_FragColor = texture2D(uSampler, vFragUV) * vec4(res, 1.0);
 
     }
 
-    /*
+/*
     //====================Modèle PHONG====================
     precision highp float;
   // Fragment-Interpolated data
@@ -211,7 +213,7 @@
   // Material
     uniform vec3 uObjectColor;
     uniform vec3 uShininess;
-    // uniform sampler2D uSampler;// texture
+    uniform sampler2D uSampler;// texture
 
     void main(void) {
       // highp vec4 texelColor = texture2D(uSampler, vTextureCoord);
@@ -234,10 +236,10 @@
        vec3 specular = specularStrength * spec * uLightColor;
 
        vec3 result = (ambient + diffuse + specular) * uObjectColor;
-       gl_FragColor = vec4(result, 1.0);
+      gl_FragColor = texture2D(uSampler, vFragUV) * vec4(result,1.0);
 
     }
-    */
+*/
 	</script>
   </body>
 </html>
